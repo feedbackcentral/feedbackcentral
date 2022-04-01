@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
@@ -6,7 +6,7 @@ const Home: NextPage = () => {
       {/* TODO Add landing page */}
       <h1>Feedback Central</h1>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
