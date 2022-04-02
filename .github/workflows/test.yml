@@ -10,11 +10,11 @@ jobs:
         with:
           node-version: "16"
       - name: Install dependencies
-        run: npm ci
+        run: yarn
       - name: Install Playwright
         run: npx playwright install --with-deps
       - name: Run your tests
-        run: npm test
+        run: yarn test
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v2
