@@ -6,7 +6,7 @@ This is the supabase project for Feedback Central, to get started create a copy 
 
 | Name              | Description                                                                                                           | Status |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------- | ------ |
-| classify_feedback | This function makes requests to MindsDB to get a prediction for feedback which is stored within the Supabase instance |   👷🏼   |
+| classify_feedback | This function makes requests to OpenAI to get a prediction for feedback which is stored within the Supabase instance  |   👷🏼   |
 | ingest            | This function is responsible for taking data in from external sources                                                 |   👷🏼   |
 
 ### Statuses
