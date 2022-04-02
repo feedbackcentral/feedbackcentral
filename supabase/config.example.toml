@@ -1,4 +1,4 @@
-project_id = "wpxsaqsmijxmvssyscfg"
+project_id = ""
 
 [api]
 port = 54321
@@ -29,5 +29,5 @@ enable_confirmations = false
 
 [auth.external.twitter]
 enabled = true
-client_id = "c0hrTEFnQTBUYXZiMWpla1hhTlE6MTpjaQ"
+client_id = ""
 secret = ""
