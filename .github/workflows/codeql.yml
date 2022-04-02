@@ -22,7 +22,7 @@ jobs:
       matrix:
         language: ["javascript"]
 
-    if: github.event != "pull_request" || github.event.review.state == 'approved'
+    if: github.event != 'pull_request' || github.event.review.state == 'approved'
 
     steps:
       - name: Checkout repository
