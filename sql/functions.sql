@@ -1,5 +1,11 @@
--- Returns [true, secret] or [false, message]
-CREATE OR REPLACE FUNCTION public.regen_integration_keypair(integration_id uuid) RETURNS anyarray AS
+CREATE TYPE public.regen_keypair AS
+(
+    success       boolean,
+    error_message text,
+    private_key   bytea
+);
+
+CREATE OR REPLACE FUNCTION public.regen_integration_keypair(integration_id uuid) RETURNS public.regen_keypair AS
 $$
 DECLARE
     integration public.integrations;
@@ -7,14 +13,14 @@ DECLARE
 BEGIN
     SELECT * INTO integration FROM public.integrations WHERE id = integration_id;
     IF integration IS NULL THEN
-        RETURN [false, 'Invalid integration ID'];
+        RETURN (false, 'Invalid integration ID', 'private-key')::public.regen_keypair;
     END IF;
     SELECT * INTO keypair FROM crypto_sign_new_keypair();
     UPDATE public.integrations
     SET public_key           = keypair.public,
         keypair_generated_at = now()
     WHERE id = integration_id;
-    RETURN [true, keypair.secret];
+    RETURN (true, '-', keypair.secret)::public.regen_keypair;
 END
 $$ LANGUAGE plpgsql SECURITY INVOKER;
 
