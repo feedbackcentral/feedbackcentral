@@ -1,3 +1,24 @@
+-- Returns [true, secret] or [false, message]
+CREATE OR REPLACE FUNCTION public.regen_integration_keypair(integration_id uuid) RETURNS anyarray AS
+$$
+DECLARE
+    integration public.integrations;
+    keypair     crypto_sign_keypair;
+BEGIN
+    SELECT * INTO integration FROM public.integrations WHERE id = integration_id;
+    IF integration IS NULL THEN
+        RETURN [false, 'Invalid integration ID'];
+    END IF;
+    SELECT * INTO keypair FROM crypto_sign_new_keypair();
+    UPDATE public.integrations
+    SET public_key           = keypair.public,
+        keypair_generated_at = now()
+    WHERE id = integration_id;
+    RETURN [true, keypair.secret];
+END
+$$ LANGUAGE plpgsql SECURITY INVOKER;
+
+-- User insert trigger
 CREATE OR REPLACE FUNCTION
     public.users_insert_trigger_fnc()
     RETURNS TRIGGER AS
