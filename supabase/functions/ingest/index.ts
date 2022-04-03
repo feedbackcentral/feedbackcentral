@@ -52,7 +52,7 @@ const verify_request = async (req: Request): Promise<[Response|null, Integration
     }
 
     return [respond(integration.status, {
-      status: "down",
+      status: "ok",
       message:
         "Error: failed to fetch integration public key",
     }), null];

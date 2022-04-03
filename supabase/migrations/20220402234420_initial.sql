@@ -71,7 +71,8 @@ CREATE TABLE public.feedback
     content        text                           not null             default '',
     source         uuid                           not null, -- Integration ID
     source_meta    jsonb                          not null             default '{}'::jsonb,
-    classification public.feedback_classification null
+    classification public.feedback_classification null,
+    classification_completion_id text null
 );
 
 -- TODO Foreign Keys
