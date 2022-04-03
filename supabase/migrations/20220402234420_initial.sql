@@ -72,12 +72,15 @@ BEGIN
     END IF;
     SELECT * INTO keypair FROM crypto_sign_new_keypair();
     UPDATE public.integrations
-    SET public_key           = keypair.public,
+    SET public_key           = '0x' + encode(keypair.public, 'hex'),
         keypair_generated_at = now()
     WHERE id = integration_id;
-    RETURN (true, '-', keypair.secret)::public.regen_keypair;
+    RETURN (true, '-', '0x' + encode(keypair.secret, 'hex'))::public.regen_keypair;
 END
 $$ LANGUAGE plpgsql SECURITY INVOKER;
+
+GRANT EXECUTE ON FUNCTION crypto_sign_new_keypair() TO authenticated;
+GRANT EXECUTE ON FUNCTION crypto_sign_new_keypair() TO postgres;
 
 CREATE TYPE public.project_tier AS ENUM ('free', 'paid');
 CREATE TYPE public.stripe_status AS ENUM ('active', 'canceled', 'unpaid', 'past_due', 'trialing', 'incomplete', 'incomplete_expired');

@@ -17,10 +17,10 @@ BEGIN
     END IF;
     SELECT * INTO keypair FROM crypto_sign_new_keypair();
     UPDATE public.integrations
-    SET public_key           = keypair.public,
+    SET public_key           = '0x' + encode(keypair.public, 'hex'),
         keypair_generated_at = now()
     WHERE id = integration_id;
-    RETURN (true, '-', keypair.secret)::public.regen_keypair;
+    RETURN (true, '-', '0x' + encode(keypair.secret, 'hex'))::public.regen_keypair;
 END
 $$ LANGUAGE plpgsql SECURITY INVOKER;
 
