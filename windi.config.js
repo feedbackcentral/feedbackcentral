@@ -1,8 +1,21 @@
+import colors from "windicss/colors";
 import { defineConfig } from "windicss/helpers";
 
 export default defineConfig({
+  shortcuts: {
+    title: "text-3xl font-bold",
+    subtitle: "text-xl",
+  },
   extract: {
     include: ["**/*.{jsx,tsx,css}"],
     exclude: ["node_modules", ".git", ".next"],
+  },
+  theme: {
+    extend: {
+      colors: {
+        primary: colors.gray[100],
+        accent: colors.gray[200],
+      },
+    },
   },
 });
