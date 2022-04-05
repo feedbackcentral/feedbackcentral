@@ -38,3 +38,5 @@ yarn-error.log*
 **/supabase/.branches
 **/supabase/.temp
 **/supabase/config.toml
+
+.vscode/**/*
