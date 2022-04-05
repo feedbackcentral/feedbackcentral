@@ -1,9 +1,7 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { Tweet, TwitterClient } from "../_utils/twitter.ts";
 
-const client = new TwitterClient(
-  "AAAAAAAAAAAAAAAAAAAAACDzawEAAAAA2BcTEqB5qI%2Ftbbx7%2BxHXg0Qm5qU%3DNwZ0O6SMgT3pSsw0nygaPtwwdiz6Lzkxpsg8I6LTYviMzrJwOJ"
-);
+const client = new TwitterClient("key");
 
 /**
  * Takes information about a source that is ready to be ingested from, then
