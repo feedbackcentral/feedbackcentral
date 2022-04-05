@@ -1,36 +1,39 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
+import { Tweet, TwitterClient } from "../_utils/twitter.ts";
 
-const usernameEndpoint =
-  "https://api.twitter.com/2/users/by?usernames=supabase";
+const client = new TwitterClient(
+  "AAAAAAAAAAAAAAAAAAAAACDzawEAAAAA2BcTEqB5qI%2Ftbbx7%2BxHXg0Qm5qU%3DNwZ0O6SMgT3pSsw0nygaPtwwdiz6Lzkxpsg8I6LTYviMzrJwOJ"
+);
 
-serve(async () => {
-  console.log("Getting from twitter");
+serve(async (req: Request) => {
+  const body = (await req.json()) as RequestBody;
 
-  const usernameRes = await fetch(usernameEndpoint, {
-    headers: {
-      "Authorization":
-        "Bearer AAAAAAAAAAAAAAAAAAAAACDzawEAAAAA2BcTEqB5qI%2Ftbbx7%2BxHXg0Qm5qU%3DNwZ0O6SMgT3pSsw0nygaPtwwdiz6Lzkxpsg8I6LTYviMzrJwOJ",
-    },
+  const { userId, hashtag, search } = body.integration_metadata;
+
+  if (body.integration_type === "twitter") {
+    const tweetParams = {
+      "tweet.fields": ["id", "author_id", "text"] as (keyof Tweet)[],
+    };
+
+    if (userId) {
+      const mentions = await client.getMentionsByUserId(userId, tweetParams);
+    }
+  }
+
+  return new Response(JSON.stringify({}), {
+    headers: { "Content-Type": "application/json" },
   });
-
-  const userId = (await usernameRes.json()).data[0].id;
-
-  const mentionsRes = await fetch(
-    `https://api.twitter.com/2/users/${userId}/mentions?tweet.fields=created_at,text,author_id`,
-    {
-      headers: {
-        "Authorization":
-          "Bearer AAAAAAAAAAAAAAAAAAAAACDzawEAAAAA2BcTEqB5qI%2Ftbbx7%2BxHXg0Qm5qU%3DNwZ0O6SMgT3pSsw0nygaPtwwdiz6Lzkxpsg8I6LTYviMzrJwOJ",
-      },
-    },
-  );
-  console.log(await mentionsRes.json());
-
-  return new Response(
-    JSON.stringify({
-      status: "down",
-      message: "Ingest service not active.",
-    }),
-    { headers: { "Content-Type": "application/json" } },
-  );
 });
+
+type TwitterMetadata = {
+  userId?: string;
+  hashtag?: string;
+  search?: string;
+};
+
+interface RequestBody {
+  integration_type: "twitter";
+  integration_metadata: TwitterMetadata;
+  last_run: string;
+  user_id: string;
+}
