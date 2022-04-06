@@ -1,7 +1,11 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { Tweet, TwitterClient } from "../_utils/twitter.ts";
 
-const client = new TwitterClient("key");
+const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");
+if (!bearerToken) {
+  throw new Error("TWITTER_BEARER_TOKEN is not set");
+}
+const client = new TwitterClient(bearerToken);
 
 /**
  * Takes information about a source that is ready to be ingested from, then
@@ -15,9 +19,9 @@ const client = new TwitterClient("key");
 serve(async (req: Request) => {
   const body = (await req.json()) as RequestBody;
 
-  const { userId, hashtag, search } = body.integration_metadata;
+  const { userId, hashtag, search } = body.integrationMetadata;
 
-  if (body.integration_type === "twitter") {
+  if (body.integrationType === "twitter") {
     const tweetParams = {
       "tweet.fields": ["id", "author_id", "text"] as (keyof Tweet)[],
     };
@@ -41,8 +45,8 @@ type TwitterMetadata = {
 };
 
 interface RequestBody {
-  integration_type: "twitter";
-  integration_metadata: TwitterMetadata;
+  integrationType: "twitter";
+  integrationMetadata: TwitterMetadata;
   last_run: string;
   user_id: string;
 }
