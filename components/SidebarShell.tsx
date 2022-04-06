@@ -4,6 +4,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
+import { useQuery } from "react-query";
+import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { User } from "@feedbackcentral/types";
 
 const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
@@ -22,6 +25,24 @@ export const SidebarShell: React.FC<{
   const router = useRouter();
   // TODO switch to custom supabase hook
   const user = useUser();
+
+  const { data: userData, isLoading: userIsLoading, error: userError } = useQuery(
+    'me',
+    async () => {
+      const { data, error } = await supabaseClient
+        .from<User>("users")
+        .select("*")
+        .eq("id", user.user!.id)
+        .single()
+
+      if (error) {
+        throw error;
+      }
+  
+      return data || undefined;
+    },
+    {enabled: user.user != null}
+  )
 
   return (
     <div className="w-full h-full bg-gray-100">
@@ -185,15 +206,16 @@ export const SidebarShell: React.FC<{
                     <div>
                       <img
                         className="inline-block h-9 w-9 rounded-full"
-                        src={`https://avatars.dicebear.com/api/identicon/${user.user.id}.svg`}
-                        alt=""
+                        src={(userData && userData.profile_picture) ? userData.profile_picture : `https://avatars.dicebear.com/api/identicon/${user.user.id}.svg`}
+                        alt="Your profile photo"
                       />
                     </div>
                     <div className="ml-3">
                       {/* TODO pre-fetch user data here! */}
                       <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                        {/*! Max Length 20! */}
-                        {user.user.id.substring(0, 20)}
+                        {userIsLoading && !userData && <div className="w-36 animate-pulse bg-gray-300 h-6 rounded-md"></div>}
+                        {userData && userData.username}
+                        {userError && user.user.id.substring(0, 20)}
                       </p>
                       <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                         View profile
