@@ -1,5 +1,6 @@
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -33,7 +34,7 @@ const CheckEmailPage: NextPage = ({ }) => {
                                 We have sent a magic login link to your email, please check your emails and click the link you were sent to login to your account.
                             </div>
                             <div>
-                                If you haven&lsquo;t received an email, check your spam folder. If the email is not there please go back to the <a href="/auth/login" className="text-indigo-600 hover:underline">login page</a> and try again.
+                                If you haven&lsquo;t received an email, check your spam folder. If the email is not there please go back to the <span className="text-indigo-600 hover:underline"><Link href="/auth/login">login page</Link></span> and try again.
                             </div>
                         </div>
                     </div>
