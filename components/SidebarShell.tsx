@@ -1,22 +1,27 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
-import { sidebars } from "data/sidebars";
 
 const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
 
-export const Shell: React.FC = ({ children }) => {
+export type SidebarItem = {
+  name: string,
+  href: string,
+  icon: React.FC<React.ComponentProps<'svg'>>
+};
+
+export const SidebarShell: React.FC<{
+  sidebarItems: SidebarItem[]
+}> = ({ children, sidebarItems }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+  // TODO switch to custom supabase hook
   const user = useUser();
-
-  if (!sidebars[router.pathname]) {
-    return <div className="w-full h-full">{children}</div>;
-  }
 
   return (
     <div className="w-full h-full bg-gray-100">
@@ -80,7 +85,7 @@ export const Shell: React.FC = ({ children }) => {
                     />
                   </div>
                   <nav className="mt-5 px-2 space-y-1">
-                    {(sidebars[router.pathname] ?? []).map(item => (
+                    {(sidebarItems ?? []).map(item => (
                       <a
                         key={item.name}
                         href={item.href}
@@ -147,7 +152,7 @@ export const Shell: React.FC = ({ children }) => {
                 />
               </div>
               <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
-                {(sidebars[router.pathname] ?? []).map(item => (
+                {(sidebarItems ?? []).map(item => (
                   <a
                     key={item.name}
                     href={item.href}
@@ -174,7 +179,8 @@ export const Shell: React.FC = ({ children }) => {
             </div>
             {user.user && (
               <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-                <a href="#" className="flex-shrink-0 w-full group block">
+                { /* eslint-disable-next-line @next/next/no-html-link-for-pages */ }
+                <a href="/profile" className="flex-shrink-0 w-full group block">
                   <div className="flex items-center">
                     <div>
                       <img
@@ -186,7 +192,8 @@ export const Shell: React.FC = ({ children }) => {
                     <div className="ml-3">
                       {/* TODO pre-fetch user data here! */}
                       <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                        {user.user.id}
+                        {/*! Max Length 20! */}
+                        {user.user.id.substring(0, 20)}
                       </p>
                       <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                         View profile

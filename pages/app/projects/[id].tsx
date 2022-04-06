@@ -1,3 +1,4 @@
+import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import type { NextPage } from "next";
 import { Doughnut } from "react-chartjs-2";
@@ -87,5 +88,7 @@ const ProjectPage: NextPage = () => {
 //     },
 //   };
 // }
+
+export const getServerSideProps = withAuthRequired({ redirectTo: '/auth/login' });
 
 export default ProjectPage;
