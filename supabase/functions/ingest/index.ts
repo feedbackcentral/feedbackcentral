@@ -20,12 +20,11 @@ serve(async (req: Request) => {
   const body = (await req.json()) as RequestBody;
 
   const { userId, hashtag, search } = body.integrationMetadata;
+  const tweetParams = {
+    "tweet.fields": ["id", "author_id", "text"] as (keyof Tweet)[],
+  };
 
-  if (body.integrationType === "twitter") {
-    const tweetParams = {
-      "tweet.fields": ["id", "author_id", "text"] as (keyof Tweet)[],
-    };
-
+  if (body.integrationType === "twitter_account") {
     if (userId) {
       const mentions = await client.getMentionsByUserId(userId, tweetParams);
 
@@ -45,7 +44,7 @@ type TwitterMetadata = {
 };
 
 interface RequestBody {
-  integrationType: "twitter";
+  integrationType: "twitter_account" | "twitter_hashtag" | "twitter_search";
   integrationMetadata: TwitterMetadata;
   last_run: string;
   user_id: string;
