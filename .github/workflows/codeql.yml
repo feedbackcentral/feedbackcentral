@@ -22,6 +22,8 @@ jobs:
       matrix:
         language: ["javascript"]
 
+    if: github.event == 'schedule' || github.event.review.state == 'approved'
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
