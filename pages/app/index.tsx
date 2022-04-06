@@ -1,9 +1,9 @@
 import { Organization } from "@feedbackcentral/types";
-import { PlusCircleIcon, PlusIcon } from "@heroicons/react/outline";
+import { PlusIcon } from "@heroicons/react/outline";
+import { BookOpenIcon } from "@heroicons/react/solid";
 import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { ProjectCard } from "~/components/ProjectCard";
 import { SidebarItem, SidebarShell } from "~/components/SidebarShell";
-import Link from "next/link";
 
 const ProjectsPage = () => {
   const organizations: Organization[] = [
@@ -60,7 +60,42 @@ const ProjectsPage = () => {
   ]
 
   const getSidebarItems = (): SidebarItem[] => {
-    return [];
+    return [
+      {
+        type: "category",
+        name: "Projects",
+        children: [
+          {
+            type: "item",
+            name: "All Projects",
+            href: "/app"
+          }
+        ]
+      },
+      {
+        type: "category",
+        name: "Organizations",
+        children: organizations.map((org) => {
+          return {
+            type: "item",
+            name: org.name,
+            href: `/orgs/${org.id}`
+          }
+        })
+      },
+      {
+        type: "category",
+        name: "Documentation",
+        children: [
+          {
+            type: "item",
+            name: "Guides",
+            href: "https://docs.feedbackcentral.io/guides",
+            icon: BookOpenIcon
+          }
+        ]
+      }
+    ];
   }
 
   return (
