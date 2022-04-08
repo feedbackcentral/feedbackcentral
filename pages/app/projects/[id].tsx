@@ -1,6 +1,8 @@
+import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import type { NextPage } from "next";
 import { Doughnut } from "react-chartjs-2";
+import { SidebarShell } from "~/components/SidebarShell";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -51,41 +53,33 @@ const ProjectPage: NextPage = () => {
   const features_launched = [];
 
   return (
-    <section className="w-full">
-      <h1 className="title">Overview</h1>
-      <section className="mt-10 ml-10">
-        <section className="flex gap-10">
-          <SummarizeCard
-            title="Total feedbacks"
-            content={`${feedbacks.length}`}
-          />
-          <SummarizeCard
-            title="Total features launched"
-            content={`${features_launched.length}`}
-          />
-          <SummarizeCard
-            title="Total features launched"
-            content={`${features_launched.length}`}
-          />
+    <SidebarShell sidebarItems={[]}>
+      <div className="w-full h-full p-4">
+        <section className="w-full">
+          <h1 className="title">Overview</h1>
+          <section className="mt-10 ml-10">
+            <section className="flex gap-10">
+              <SummarizeCard
+                title="Total feedbacks"
+                content={`${feedbacks.length}`}
+              />
+              <SummarizeCard
+                title="Total features launched"
+                content={`${features_launched.length}`}
+              />
+              <SummarizeCard
+                title="Total features launched"
+                content={`${features_launched.length}`}
+              />
+            </section>
+            <section></section>
+          </section>
         </section>
-        <section></section>
-      </section>
-    </section>
+      </div>
+    </SidebarShell>
   );
 };
 
-// export async function getStaticProps() {
-//   // Call an external API endpoint to get posts
-//   const res = await fetch('https://.../posts');
-//   const posts = await res.json();
-
-//   // By returning { props: { posts } }, the Blog component
-//   // will receive `posts` as a prop at build time
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }
+export const getServerSideProps = withAuthRequired({ redirectTo: '/auth/login' });
 
 export default ProjectPage;

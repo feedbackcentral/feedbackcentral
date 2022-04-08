@@ -6,11 +6,11 @@
 package = "@netlify/plugin-nextjs"
 
 [[redirects]]
-  from = "/docs/*"
+  from = "/docs/"
   status = 303
   to = "https://docs.feedbackcentral.io/*"
 
 [[redirects]]
-  from = "/blog/*"
+  from = "/blog/"
   status = 303
   to = "https://docs.feedbackcentral.io/blog/*"
