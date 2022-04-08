@@ -1,45 +1,51 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Fragment, useState } from "react";
+import { User } from "@feedbackcentral/types";
 import { Dialog, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { useRouter } from "next/router";
-import { useUser } from "@supabase/supabase-auth-helpers/react";
-import { useQuery } from "react-query";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
-import { User } from "@feedbackcentral/types";
+import { useUser } from "@supabase/supabase-auth-helpers/react";
+import { useRouter } from "next/router";
+import React, { Fragment, useState } from "react";
+import { useQuery } from "react-query";
 
 const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
 
-export type SidebarItem = {
-  type: "item"
-  name: string,
-  href: string,
-  icon?: React.FC<React.ComponentProps<'svg'>>
-} | {
-  type: "category"
-  name: string,
-  icon?: React.FC<React.ComponentProps<'svg'>>,
-  children: SidebarItem[]
-};
+export type SidebarItem =
+  | {
+      type: "item";
+      name: string;
+      href: string;
+      icon?: React.FC<React.ComponentProps<"svg">>;
+    }
+  | {
+      type: "category";
+      name: string;
+      icon?: React.FC<React.ComponentProps<"svg">>;
+      children: SidebarItem[];
+    };
 
 export const SidebarShell: React.FC<{
-  sidebarItems: SidebarItem[]
+  sidebarItems: SidebarItem[];
 }> = ({ children, sidebarItems }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   // TODO switch to custom supabase hook
   const user = useUser();
 
-  const { data: userData, isLoading: userIsLoading, error: userError } = useQuery(
-    'me',
+  const {
+    data: userData,
+    isLoading: userIsLoading,
+    error: userError,
+  } = useQuery(
+    "me",
     async () => {
       const { data, error } = await supabaseClient
         .from<User>("users")
         .select("*")
         .eq("id", user.user!.id)
-        .single()
+        .single();
 
       if (error) {
         throw error;
@@ -48,11 +54,11 @@ export const SidebarShell: React.FC<{
       return data || undefined;
     },
     { enabled: user.user != null }
-  )
+  );
 
-  const SidebarItems: React.FC<{items: SidebarItem[]}> = ({items}) => {
+  const SidebarItems: React.FC<{ items: SidebarItem[] }> = ({ items }) => {
     return (
-      <div>
+      <div className="mt-2">
         {items.map((item, i) => {
           if (item.type == "item") {
             return (
@@ -66,30 +72,32 @@ export const SidebarShell: React.FC<{
                   "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                 )}
               >
-                {item.icon && <item.icon
-                  className={classNames(
-                    item.href == router.pathname
-                      ? "text-gray-500"
-                      : "text-gray-400 group-hover:text-gray-500",
-                    "mr-4 flex-shrink-0 h-6 w-6"
-                  )}
-                  aria-hidden="true"
-                />}
+                {item.icon && (
+                  <item.icon
+                    className={classNames(
+                      item.href == router.pathname
+                        ? "text-gray-500"
+                        : "text-gray-400 group-hover:text-gray-500",
+                      "mr-4 flex-shrink-0 h-6 w-6"
+                    )}
+                    aria-hidden="true"
+                  />
+                )}
                 {item.name}
               </a>
             );
           } else {
             return (
-              <div key={item.name+i}>
+              <div key={item.name + i} className="mt-5">
                 <p>{item.name}</p>
                 <SidebarItems items={item.children} />
               </div>
-            )
+            );
           }
         })}
       </div>
     );
-  }
+  };
 
   return (
     <div className="w-full h-full bg-gray-100">
@@ -153,7 +161,7 @@ export const SidebarShell: React.FC<{
                     />
                   </div>
                   <nav className="mt-5 px-2">
-                    <SidebarItems items={sidebarItems}/>
+                    <SidebarItems items={sidebarItems} />
                   </nav>
                 </div>
                 <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
@@ -198,25 +206,31 @@ export const SidebarShell: React.FC<{
                 />
               </div>
               <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
-                <SidebarItems items={sidebarItems}/>
+                <SidebarItems items={sidebarItems} />
               </nav>
             </div>
             {user.user && (
               <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-                { /* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a href="/profile" className="flex-shrink-0 w-full group block">
                   <div className="flex items-center">
                     <div>
                       <img
                         className="inline-block h-9 w-9 rounded-full"
-                        src={(userData && userData.profile_picture) ? userData.profile_picture : `https://avatars.dicebear.com/api/identicon/${user.user.id}.svg`}
+                        src={
+                          userData && userData.profile_picture
+                            ? userData.profile_picture
+                            : `https://avatars.dicebear.com/api/identicon/${user.user.id}.svg`
+                        }
                         alt="Your profile photo"
                       />
                     </div>
                     <div className="ml-3">
                       {/* TODO pre-fetch user data here! */}
                       <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                        {userIsLoading && !userData && <div className="w-36 animate-pulse bg-gray-300 h-6 rounded-md"></div>}
+                        {userIsLoading && !userData && (
+                          <div className="w-36 animate-pulse bg-gray-300 h-6 rounded-md"></div>
+                        )}
                         {userData && userData.username}
                         {userError && user.user.id.substring(0, 20)}
                       </p>

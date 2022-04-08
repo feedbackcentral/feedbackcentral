@@ -17,7 +17,7 @@ const ProjectsPage = () => {
           description: "This is a project",
           tier: "free",
           createdAt: new Date("2020-01-01"),
-          updatedAt: new Date("2020-01-01")
+          updatedAt: new Date("2020-01-01"),
         },
         {
           id: "123",
@@ -25,9 +25,9 @@ const ProjectsPage = () => {
           description: "This is a project",
           tier: "pro",
           createdAt: new Date("2020-01-01"),
-          updatedAt: new Date("2020-01-01")
+          updatedAt: new Date("2020-01-01"),
         },
-      ]
+      ],
     },
     {
       id: "1234",
@@ -39,25 +39,27 @@ const ProjectsPage = () => {
           description: "This is a project",
           tier: "pro",
           createdAt: new Date("2020-01-01"),
-          updatedAt: new Date("2020-01-01")
+          updatedAt: new Date("2020-01-01"),
         },
-      ]
+      ],
     },
     {
       id: "12345",
       name: "Acme, Inc.",
-      projects: Array(12).fill(0).map((_, i) => {
-        return {
-          id: i.toString(),
-          name: `My Project ${i}`,
-          description: `This is a project that was automagically generated for testing, it is number ${i} of i don't even know.`,
-          tier: "free",
-          createdAt: new Date("2020-01-01"),
-          updatedAt: new Date("2020-01-01")
-        }
-      })
-    }
-  ]
+      projects: Array(12)
+        .fill(0)
+        .map((_, i) => {
+          return {
+            id: i.toString(),
+            name: `My Project ${i}`,
+            description: `This is a project that was automagically generated for testing, it is number ${i} of i don't even know.`,
+            tier: "free",
+            createdAt: new Date("2020-01-01"),
+            updatedAt: new Date("2020-01-01"),
+          };
+        }),
+    },
+  ];
 
   const getSidebarItems = (): SidebarItem[] => {
     return [
@@ -68,20 +70,20 @@ const ProjectsPage = () => {
           {
             type: "item",
             name: "All Projects",
-            href: "/app"
-          }
-        ]
+            href: "/app",
+          },
+        ],
       },
       {
         type: "category",
         name: "Organizations",
-        children: organizations.map((org) => {
+        children: organizations.map(org => {
           return {
             type: "item",
             name: org.name,
-            href: `/orgs/${org.id}`
-          }
-        })
+            href: `/orgs/${org.id}`,
+          };
+        }),
       },
       {
         type: "category",
@@ -91,12 +93,12 @@ const ProjectsPage = () => {
             type: "item",
             name: "Guides",
             href: "https://docs.feedbackcentral.io/guides",
-            icon: BookOpenIcon
-          }
-        ]
-      }
+            icon: BookOpenIcon,
+          },
+        ],
+      },
     ];
-  }
+  };
 
   return (
     <SidebarShell sidebarItems={getSidebarItems()}>
@@ -106,22 +108,28 @@ const ProjectsPage = () => {
           <p className="text-sm">New Project</p>
         </button>
         <div className="flex flex-col space-y-6 mt-6">
-          {organizations.map((org) => <div key={org.id} className="space-y-3">
-            <h2 className="text-lg">{org.name}</h2>
-            <ul className="grid gap-4 mx-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ">
-              {org.projects.map((project) => <li key={project.id} className="col-span-1">
-                <a href={`/app/projects/${project.id}`}>
-                  <ProjectCard project={project} />
-                </a>
-              </li>)}
-            </ul>
-          </div>)}
+          {organizations.map(org => (
+            <div key={org.id} className="space-y-3">
+              <h2 className="text-lg">{org.name}</h2>
+              <ul className="grid gap-4 mx-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ">
+                {org.projects.map(project => (
+                  <li key={project.id} className="col-span-1">
+                    <a href={`/app/projects/${project.id}`}>
+                      <ProjectCard project={project} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </SidebarShell>
   );
 };
 
-export const getServerSideProps = withAuthRequired({ redirectTo: '/auth/login' });
+export const getServerSideProps = withAuthRequired({
+  redirectTo: "/auth/login",
+});
 
 export default ProjectsPage;
