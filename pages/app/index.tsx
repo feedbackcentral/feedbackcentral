@@ -1,4 +1,4 @@
-import { Organization } from "@feedbackcentral/types";
+import { Organization, ProjectTier } from "@feedbackcentral/types";
 import { PlusIcon } from "@heroicons/react/outline";
 import { BookOpenIcon } from "@heroicons/react/solid";
 import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
@@ -15,7 +15,8 @@ const ProjectsPage = () => {
           id: "1234",
           name: "Project 1",
           description: "This is a project",
-          tier: "free",
+          tier: ProjectTier.FREE,
+          feedbacks: [],
           createdAt: new Date("2020-01-01"),
           updatedAt: new Date("2020-01-01"),
         },
@@ -23,7 +24,8 @@ const ProjectsPage = () => {
           id: "123",
           name: "Project 2",
           description: "This is a project",
-          tier: "pro",
+          tier: ProjectTier.PRO,
+          feedbacks: [],
           createdAt: new Date("2020-01-01"),
           updatedAt: new Date("2020-01-01"),
         },
@@ -37,7 +39,8 @@ const ProjectsPage = () => {
           id: "1235",
           name: "Project 1",
           description: "This is a project",
-          tier: "pro",
+          tier: ProjectTier.PRO,
+          feedbacks: [],
           createdAt: new Date("2020-01-01"),
           updatedAt: new Date("2020-01-01"),
         },
@@ -53,7 +56,8 @@ const ProjectsPage = () => {
             id: i.toString(),
             name: `My Project ${i}`,
             description: `This is a project that was automagically generated for testing, it is number ${i} of i don't even know.`,
-            tier: "free",
+            tier: ProjectTier.FREE,
+            feedbacks: [],
             createdAt: new Date("2020-01-01"),
             updatedAt: new Date("2020-01-01"),
           };

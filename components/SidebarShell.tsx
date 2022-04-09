@@ -259,7 +259,7 @@ export const SidebarShell = ({
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="flex-1">
+          <main className="flex-1 bg-gray-100">
             <div id="__content">{children}</div>
           </main>
         </div>
