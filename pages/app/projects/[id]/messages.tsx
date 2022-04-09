@@ -1,4 +1,5 @@
 import { Feedback, FeedbackSource, Language } from "@feedbackcentral/types";
+import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -152,5 +153,9 @@ const MessagesPage: NextPage = () => {
     </SidebarShell>
   );
 };
+
+export const getServerSideProps = withAuthRequired({
+  redirectTo: "/auth/login",
+});
 
 export default MessagesPage;

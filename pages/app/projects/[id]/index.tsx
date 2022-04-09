@@ -1,5 +1,6 @@
 // import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { Feedback, FeedbackSource, Language } from "@feedbackcentral/types";
+import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import {
   ArcElement,
   CategoryScale,
@@ -221,6 +222,8 @@ const ProjectPage: NextPage = () => {
   );
 };
 
-// export const getServerSideProps = withAuthRequired({ redirectTo: '/auth/login' });
+export const getServerSideProps = withAuthRequired({
+  redirectTo: "/auth/login",
+});
 
 export default ProjectPage;

@@ -1,3 +1,4 @@
+import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -47,5 +48,9 @@ const MessagesPage: NextPage = () => {
     </SidebarShell>
   );
 };
+
+export const getServerSideProps = withAuthRequired({
+  redirectTo: "/auth/login",
+});
 
 export default MessagesPage;
