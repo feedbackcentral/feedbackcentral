@@ -18,6 +18,7 @@ const client = new TwitterClient(bearerToken);
  */
 serve(async (req: Request) => {
   const body = (await req.json()) as RequestBody;
+  console.log("CALLED FUNCTION", body);
 
   const { userId, hashtag, search } = body.integrationMetadata;
   const tweetParams = {
@@ -27,6 +28,7 @@ serve(async (req: Request) => {
   if (body.integrationType === "twitter_account") {
     if (userId) {
       const mentions = await client.getMentionsByUserId(userId, tweetParams);
+      console.log(mentions);
 
       //Now we can store mentions in the database. We should also do classification here.
     }
