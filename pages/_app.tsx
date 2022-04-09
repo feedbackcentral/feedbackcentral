@@ -12,6 +12,7 @@ const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
+    // @ts-ignore
     <QueryClientProvider client={queryClient}>
       <UserProvider supabaseClient={supabaseClient}>
         <Toaster />
