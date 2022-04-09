@@ -34,7 +34,7 @@ BEGIN
     if NEW.email IS NOT NULL then
         INSERT INTO public.users (id, username, login_methods)
         VALUES (NEW.id,
-                NEW.email,
+                (SELECT split_part(NEW.email, '@', 1)),
                 ARRAY ['magic']);
         RETURN NEW;
     else
