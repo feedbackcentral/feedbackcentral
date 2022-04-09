@@ -26,9 +26,12 @@ export type SidebarItem =
       children: SidebarItem[];
     };
 
-export const SidebarShell: React.FC<{
+export const SidebarShell = ({
+  children,
+  sidebarItems,
+}: React.PropsWithChildren<{
   sidebarItems: SidebarItem[];
-}> = ({ children, sidebarItems }) => {
+}>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   // TODO switch to custom supabase hook
@@ -227,6 +230,7 @@ export const SidebarShell: React.FC<{
                     </div>
                     <div className="ml-3">
                       {/* TODO pre-fetch user data here! */}
+                      {/* @ts-ignore */}
                       <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                         {userIsLoading && !userData && (
                           <div className="w-36 animate-pulse bg-gray-300 h-6 rounded-md"></div>
