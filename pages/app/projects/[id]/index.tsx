@@ -17,7 +17,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Line } from "react-chartjs-2";
 import { SidebarShell } from "~/components/SidebarShell";
-import { getSidebarItems } from "../_sidebarItems";
+import { getProjectSidebarItems } from "~/lib/sidebarItems";
 
 ChartJS.register(
   ArcElement,
@@ -186,7 +186,9 @@ const ProjectPage: NextPage = () => {
   });
 
   return (
-    <SidebarShell sidebarItems={getSidebarItems(router.query.id as string)}>
+    <SidebarShell
+      sidebarItems={getProjectSidebarItems(router.query.id as string)}
+    >
       <section className="w-full h-full p-10">
         <h1 className="title">Overview</h1>
         <section className="mt-10">

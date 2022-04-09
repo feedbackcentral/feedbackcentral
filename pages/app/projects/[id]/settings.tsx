@@ -5,7 +5,7 @@ import React from "react";
 import { Button } from "~/components/forms/Button";
 import { Field } from "~/components/forms/Field";
 import { SidebarShell } from "~/components/SidebarShell";
-import { getSidebarItems } from "../_sidebarItems";
+import { getProjectSidebarItems } from "~/lib/sidebarItems";
 
 const MessagesPage: NextPage = () => {
   const router = useRouter();
@@ -24,7 +24,9 @@ const MessagesPage: NextPage = () => {
   };
 
   return (
-    <SidebarShell sidebarItems={getSidebarItems(router.query.id as string)}>
+    <SidebarShell
+      sidebarItems={getProjectSidebarItems(router.query.id as string)}
+    >
       <section className="h-full w-full p-10">
         <h1 className="title">Settings</h1>
         <section className="flex flex-wrap mt-10 gap-5">

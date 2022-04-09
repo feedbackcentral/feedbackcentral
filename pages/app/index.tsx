@@ -65,7 +65,7 @@ const ProjectsPage = () => {
     },
   ];
 
-  const getSidebarItems = (): SidebarItem[] => {
+  const getProjectSidebarItems = (): SidebarItem[] => {
     return [
       {
         type: "category",
@@ -105,7 +105,7 @@ const ProjectsPage = () => {
   };
 
   return (
-    <SidebarShell sidebarItems={getSidebarItems()}>
+    <SidebarShell sidebarItems={getProjectSidebarItems()}>
       <div className="w-full h-full p-4">
         <button className="flex flex-row items-center content-center space-x-2 p-2 rounded bg-indigo-600 text-gray-200">
           <PlusIcon className="w-6 h-6" />

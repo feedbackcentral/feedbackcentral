@@ -1,6 +1,6 @@
 import { SidebarItem } from "~/components/SidebarShell";
 
-export const getSidebarItems = (id: string): SidebarItem[] => [
+export const getProjectSidebarItems = (id: string): SidebarItem[] => [
   {
     type: "item",
     name: "Overview",
