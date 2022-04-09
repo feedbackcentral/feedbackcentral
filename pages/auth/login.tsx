@@ -9,14 +9,13 @@ import { Button } from "~/components/forms/Button";
 const LoginPage: NextPage = () => {
   const { user, error } = useUser();
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (user) {
     router.push("/app");
     return null;
   }
-
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const signIn = async (e: FormEvent) => {
     e.preventDefault();
