@@ -8,7 +8,19 @@ The AI Powered Feedback Aggregator for the Supabase 2022 Hackathon
 The project is available at [feedbackcentral.io](https://feedbackcentral.io), any pull request also has an automatically generated preview URL.
 
 ## How to use the project?
-For Olyno/Victor to fill out
+
+This project uses NextJS. To start it, you can simply run these commands:
+
+```
+yarn install
+yarn dev
+```
+
+You can also build for production using
+
+```
+yarn build
+```
 
 ## How we use Supabase?
 ### Database
