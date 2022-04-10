@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { Tweet, TwitterClient } from "../_utils/twitter.ts";
+import { supabaseClient } from "../_utils/supabase.ts";
 
 const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");
 if (!bearerToken) {
@@ -20,17 +21,39 @@ serve(async (req: Request) => {
   const body = (await req.json()) as RequestBody;
   console.log("CALLED FUNCTION", body);
 
-  const { userId, hashtag, search } = body.integrationMetadata;
-  const tweetParams = {
+  const { userId, hashtag, search } = body.parameters;
+  const tweetParams: Record<string, any> = {
     "tweet.fields": ["id", "author_id", "text"] as (keyof Tweet)[],
   };
 
-  if (body.integrationType === "twitter_account") {
+  if (body.last_run_at) {
+    tweetParams["start_time"] = body.last_run_at;
+  }
+
+  if (body.type === "twitter_mention") {
     if (userId) {
       const mentions = await client.getMentionsByUserId(userId, tweetParams);
       console.log(mentions);
 
+      const feedbackToInsert = mentions.data.map(tweet => ({
+        content: tweet.text,
+        source: body.id,
+        project_id: body.project_id,
+      }));
+
       //Now we can store mentions in the database. We should also do classification here.
+      const { data } = await supabaseClient
+        .from("feedback")
+        .insert(feedbackToInsert)
+        .throwOnError();
+
+      console.log(`Inserted ${data?.length} feedback`);
+
+      await supabaseClient
+        .from("sources")
+        .update({ last_run_at: Date.now() })
+        .match({ id: body.id })
+        .throwOnError();
     }
   }
 
@@ -46,8 +69,12 @@ type TwitterMetadata = {
 };
 
 interface RequestBody {
-  integrationType: "twitter_account" | "twitter_hashtag" | "twitter_search";
-  integrationMetadata: TwitterMetadata;
+  id: string;
+  type: "twitter_mention" | "twitter_hashtag" | "twitter_search";
+  parameters: TwitterMetadata;
   last_run: string;
   user_id: string;
+  project_id: string;
+  last_run_at: string;
+  next_run_at: string;
 }

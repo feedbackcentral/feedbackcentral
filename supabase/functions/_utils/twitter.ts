@@ -10,10 +10,7 @@ export class TwitterClient {
     return await this._get<User>(`users/by/username/${username}`);
   }
 
-  async getMentionsByUserId(
-    userId: string,
-    params?: { "tweet.fields": (keyof Tweet)[] } & Record<string, any>
-  ) {
+  async getMentionsByUserId(userId: string, params?: Record<string, any>) {
     return await this._get<Tweet[]>(`users/${userId}/mentions`, params);
   }
 
@@ -21,6 +18,8 @@ export class TwitterClient {
     const fetchUrl = `${this.baseUrl}${path}${
       params ? "?" + stringify(params, { arrayFormat: "comma" }) : ""
     }`;
+
+    console.log(`Fetching ${fetchUrl}`);
 
     return (await (
       await fetch(fetchUrl, {
