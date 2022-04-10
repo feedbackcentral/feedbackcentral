@@ -17,8 +17,8 @@ All of our data is stored in the Supabase hosted PostgreSQL using RLS to protect
 #### Postgres Functions
 
 We have a couple functions in plpgsql:
-- `public.regen_integration_keypair`, this uses pgcrypto to generate a keypair used for validation of requests. It returns the private key and that is the only time it can ver be exposed as we then store the public key as a hex string in the database
-- `public.???` This function is used by pg_cron to asynchronously call the ingest function with the relevant headers which are signatures created by `pg_crypto`
+- `public.regen_integration_keypair`, this uses pgsodium to generate a keypair used for validation of requests. It returns the private key and that is the only time it can ver be exposed as we then store the public key as a hex string in the database
+- `public.???` This function is used by pg_cron to asynchronously call the ingest function with the relevant headers which are signatures created by pgsodium
 
 ### Auth
 We support magic links and Twitter OAuth, this is managed by GoTrue from Supabase. This links into the RLS system and the permissions for organizations/teams
