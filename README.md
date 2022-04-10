@@ -38,3 +38,18 @@ This function is run on a cron job or by an integration wanting to record. This 
 |--------------------------------------------------------------------|------------------------------------------------------------------|--------------------------------------------------------------------------|
 | <a href="https://github.com/HarryET">HarryET</a>                   | <a href="https://github.com/Olyno">Olyno</a>                     | <a href="https://github.com/VictorPeralta">VictorPeralta</a>             |
 | <a href="https://twitter.com/TheHarryET">@TheHarryET</a>           | <a href="https://twitter.com/OlynoWorker">@OlynoWorker</a>       | <a href="https://twitter.com/PeraltaDev">@PeraltaDev</a>                 |
+
+## License
+Copyright (C) 2022 Harry Bairstow, Victor Peralta, Olyno
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
