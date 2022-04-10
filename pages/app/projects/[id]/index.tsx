@@ -1,6 +1,6 @@
 // import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
-import { Feedback, FeedbackSource, Language } from "@feedbackcentral/types";
-import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
+import { Feedback } from "@feedbackcentral/types";
+import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import {
   ArcElement,
   CategoryScale,
@@ -15,6 +15,7 @@ import {
 import { capitalize, groupBy } from "lodash";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { SidebarShell } from "~/components/SidebarShell";
 import { getProjectSidebarItems } from "~/lib/sidebarItems";
@@ -43,10 +44,10 @@ interface StatsCardProps {
 
 const EvolutionChart = ({ feedbacks }: EvolutionChartProps) => {
   const feedbacksSorted = feedbacks.sort(
-    (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+    (a, b) => a.created_at.getTime() - b.created_at.getTime()
   );
   const feedbacksByMonths = groupBy(feedbacksSorted, feedback =>
-    feedback.createdAt.getMonth()
+    feedback.created_at.getMonth()
   );
 
   const data = {
@@ -136,66 +137,37 @@ const StatsCard = ({ title, amounts, fields, datas }: StatsCardProps) => {
 
 const ProjectPage: NextPage = () => {
   const router = useRouter();
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const projectId = router.query.id as string;
 
-  // TODO: Connect with Supabase to get real datas
-  const feedbacks: Feedback[] = [
-    {
-      id: 1,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.1,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-01-01T00:00:00.000Z"),
-    },
-    {
-      id: 2,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.2,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-01-10T00:00:00.000Z"),
-    },
-    {
-      id: 3,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.4,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-01-12T00:00:00.000Z"),
-    },
-    {
-      id: 4,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.7,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-02-05T00:00:00.000Z"),
-    },
-  ];
+  useEffect(() => {
+    supabaseClient
+      .from<Feedback>("feedbacks")
+      .select("*")
+      .eq("project_id", projectId)
+      .then(({ data: feedbacks }) => {
+        if (!feedbacks) return;
+        setFeedbacks(feedbacks);
+      });
+  }, []);
 
-  const groupedByLanguage = groupBy(feedbacks, feedback => feedback.language);
-  const groupedByRelevance = groupBy(feedbacks, feedback => {
-    if (feedback.relevance > 0.5) {
-      return "positive";
-    }
-    return "negative";
-  });
+  // const groupedByLanguage = groupBy(feedbacks, feedback => feedback.language);
+  // const groupedByRelevance = groupBy(feedbacks, feedback => {
+  //   if (feedback.relevance > 0.5) {
+  //     return "positive";
+  //   }
+  //   return "negative";
+  // });
 
   return (
-    <SidebarShell
-      sidebarItems={getProjectSidebarItems(router.query.id as string)}
-    >
+    <SidebarShell sidebarItems={getProjectSidebarItems(projectId)}>
       <section className="w-full h-full p-10">
         <h1 className="title">Overview</h1>
         <section className="mt-10">
           <EvolutionChart feedbacks={feedbacks} />
 
           <div className="mt-10 flex flex-wrap gap-10">
-            <StatsCard
+            {/* <StatsCard
               title="Languages"
               amounts={Object.keys(groupedByLanguage).map(
                 v => groupedByLanguage[v].length
@@ -216,16 +188,12 @@ const ProjectPage: NextPage = () => {
                 language =>
                   (100 * groupedByRelevance[language].length) / feedbacks.length
               )}
-            />
+            /> */}
           </div>
         </section>
       </section>
     </SidebarShell>
   );
 };
-
-export const getServerSideProps = withAuthRequired({
-  redirectTo: "/auth/login",
-});
 
 export default ProjectPage;

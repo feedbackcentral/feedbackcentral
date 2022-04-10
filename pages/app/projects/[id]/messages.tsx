@@ -1,9 +1,9 @@
-import { Feedback, FeedbackSource, Language } from "@feedbackcentral/types";
-import { withAuthRequired } from "@supabase/supabase-auth-helpers/nextjs";
+import { Feedback } from "@feedbackcentral/types";
+import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "~/components/forms/Button";
 import { Field } from "~/components/forms/Field";
 import { SidebarShell } from "~/components/SidebarShell";
@@ -12,19 +12,19 @@ import { getProjectSidebarItems } from "~/lib/sidebarItems";
 interface MessageCardProps {
   feedback: Feedback;
   isReplying: boolean;
-  onReply: (id: number) => any;
+  onReply: (id: string) => any;
 }
 
 const MessageCard = ({ feedback, onReply, isReplying }: MessageCardProps) => {
-  const isPositive = feedback.relevance > 0.5;
+  // const isPositive = feedback.relevance > 0.5;
   return (
     <div className="rounded-md h-full bg-light-100 shadow-md mt-5 p-5 w-3/10 relative <md:w-full">
       <header className="flex justify-between">
         <div className="flex gap-5 items-center">
           <Image src="/icons/twitter.svg" width={30} height={30} />
-          <p>{feedback.author}</p>
+          {/* <p>{feedback.author}</p> */}
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <div className={isPositive ? "" : "rotate-x-180 transform"}>
             <Image
               src={
@@ -36,7 +36,7 @@ const MessageCard = ({ feedback, onReply, isReplying }: MessageCardProps) => {
               height={20}
             />
           </div>
-        </div>
+        </div> */}
       </header>
       <p className="mt-5">{feedback.content}</p>
       <footer className="flex mt-5 justify-end items-center">
@@ -69,56 +69,32 @@ const MessageCard = ({ feedback, onReply, isReplying }: MessageCardProps) => {
 
 const MessagesPage: NextPage = () => {
   const router = useRouter();
-  const [displayModal, setDisplayModal] = React.useState<number | false>(false);
-  // TODO: Connect with Supabase to get real datas
-  const [feedbacks, setFeedbacks] = React.useState<Feedback[]>([
-    {
-      id: 1,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.8,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-01-01T00:00:00.000Z"),
-    },
-    {
-      id: 2,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.3,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-01-10T00:00:00.000Z"),
-    },
-    {
-      id: 3,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.6,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-01-12T00:00:00.000Z"),
-    },
-    {
-      id: 4,
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      author: "John Doe",
-      relevance: 0.2,
-      source: FeedbackSource.TWITTER,
-      language: Language.ENGLISH,
-      createdAt: new Date("2020-02-05T00:00:00.000Z"),
-    },
-  ]);
+  const [displayModal, setDisplayModal] = React.useState<string | false>(false);
+  const [feedbacks, setFeedbacks] = React.useState<Feedback[]>([]);
+  const projectId = router.query.id as string;
+
+  useEffect(() => {
+    supabaseClient
+      .from<Feedback>("feedbacks")
+      .select("*")
+      .eq("project_id", projectId)
+      .then(({ data: feedbacks }) => {
+        if (!feedbacks) return;
+        setFeedbacks(feedbacks);
+      });
+  }, []);
 
   const sortBy = (field: string) => {
     console.log({ field });
     switch (field) {
       case "default":
-        feedbacks.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+        feedbacks.sort(
+          (a, b) => a.created_at.getTime() - b.created_at.getTime()
+        );
         break;
-      case "relevance":
-        feedbacks.sort((a, b) => b.relevance - a.relevance);
-        break;
+      // case "relevance":
+      //   feedbacks.sort((a, b) => b.relevance - a.relevance);
+      //   break;
       default:
         break;
     }
@@ -126,9 +102,7 @@ const MessagesPage: NextPage = () => {
   };
 
   return (
-    <SidebarShell
-      sidebarItems={getProjectSidebarItems(router.query.id as string)}
-    >
+    <SidebarShell sidebarItems={getProjectSidebarItems(projectId)}>
       <section className="h-full w-full p-10">
         <h1 className="title">Messages</h1>
         <section className="mt-10">
@@ -155,9 +129,5 @@ const MessagesPage: NextPage = () => {
     </SidebarShell>
   );
 };
-
-export const getServerSideProps = withAuthRequired({
-  redirectTo: "/auth/login",
-});
 
 export default MessagesPage;
