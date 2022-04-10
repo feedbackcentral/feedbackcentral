@@ -16,7 +16,7 @@ export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           <ChevronRightIcon className="w-9 h-6 text-gray-400" />
         </div>
         <div>
-          <p className="text-sm text-gray-500">{project.description}</p>
+          {/* <p className="text-sm text-gray-500">{project.description}</p> */}
         </div>
       </div>
     </div>
