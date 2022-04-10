@@ -15,12 +15,11 @@ const ProjectsPage: NextPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
 
-  if (!user) {
-    router.push("/auth/login");
-    return null;
-  }
-
   useEffect(() => {
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
     supabaseClient
       .from<Project>("projects")
       .select("*")
