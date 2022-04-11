@@ -7,6 +7,9 @@ const nextConfig = {
     config.plugins.push(new WindiCSSWebpackPlugin());
     return config;
   },
+  images: {
+    domains: ["avatars.dicebear.com"],
+  },
 };
 
 module.exports = nextConfig;
