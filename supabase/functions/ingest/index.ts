@@ -35,25 +35,28 @@ serve(async (req: Request) => {
       const mentions = await client.getMentionsByUserId(userId, tweetParams);
       console.log(mentions);
 
-      const feedbackToInsert = mentions.data.map(tweet => ({
+      const feedbackToInsert = mentions.data?.map(tweet => ({
         content: tweet.text,
         source: body.id,
         project_id: body.project_id,
       }));
+      if (feedbackToInsert && feedbackToInsert?.length > 0) {
+        //Now we can store mentions in the database. We should also do classification here.
+        const { data } = await supabaseClient
+          .from("feedbacks")
+          .insert(feedbackToInsert)
+          .throwOnError();
 
-      //Now we can store mentions in the database. We should also do classification here.
-      const { data } = await supabaseClient
-        .from("feedback")
-        .insert(feedbackToInsert)
-        .throwOnError();
+        console.log(`Inserted ${data?.length} feedback`);
 
-      console.log(`Inserted ${data?.length} feedback`);
-
-      await supabaseClient
-        .from("sources")
-        .update({ last_run_at: Date.now() })
-        .match({ id: body.id })
-        .throwOnError();
+        await supabaseClient
+          .from("sources")
+          .update({ last_run_at: new Date().toISOString() })
+          .match({ id: body.id })
+          .throwOnError();
+      } else {
+        console.log("No new mentions found");
+      }
     }
   }
 

@@ -27,7 +27,7 @@ export class TwitterClient {
           Authorization: `Bearer ${this.bearerToken}`,
         },
       })
-    ).json()) as { data: T };
+    ).json()) as { data?: T };
   }
 }
 
