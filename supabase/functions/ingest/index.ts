@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { Tweet, TwitterClient } from "../_utils/twitter.ts";
 import { supabaseClient } from "../_utils/supabase.ts";
+import { verify_request } from "../_utils/verify_request.ts";
 
 const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");
 if (!bearerToken) {
@@ -18,6 +19,11 @@ const client = new TwitterClient(bearerToken);
  * 3. Updates the source's last_run to now, and next_ingest_at field to the next time the source should be ingested.
  */
 serve(async (req: Request) => {
+  const [verify_response, integration] = await verify_request(req);
+  if(verify_response) {
+    return verify_response;
+  }
+
   const body = (await req.json()) as RequestBody;
   console.log("CALLED FUNCTION", body);
 
