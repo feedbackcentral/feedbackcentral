@@ -16,10 +16,7 @@ const ProjectsPage: NextPage = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
-    if (!user) {
-      router.push("/auth/login");
-      return;
-    }
+    if (!user) return;
     supabaseClient
       .from<Project>("projects")
       .select("*")
@@ -39,10 +36,15 @@ const ProjectsPage: NextPage = () => {
       });
   }, []);
 
+  const createNewProject = () => router.push("/app/projects/new");
+
   return (
     <SidebarShell sidebarItems={getProjectsSidebarItems(projects)}>
       <div className="w-full h-full p-4">
-        <button className="flex flex-row items-center content-center space-x-2 p-2 rounded bg-indigo-600 text-gray-200">
+        <button
+          className="flex flex-row items-center content-center space-x-2 p-2 rounded bg-indigo-600 text-gray-200"
+          onClick={createNewProject}
+        >
           <PlusIcon className="w-6 h-6" />
           <p className="text-sm">New Project</p>
         </button>
