@@ -43,34 +43,33 @@ interface StatsCardProps {
 }
 
 const EvolutionChart = ({ feedbacks }: EvolutionChartProps) => {
-  const feedbacksSorted = feedbacks.sort(
-    (a, b) => a.created_at.getTime() - b.created_at.getTime()
+  const feedbacksSorted = feedbacks.sort((a, b) =>
+    a.created_at < b.created_at ? 1 : -1
   );
   const feedbacksByMonths = groupBy(feedbacksSorted, feedback =>
-    feedback.created_at.getMonth()
+    new Date(feedback.created_at).getMonth()
   );
+  const labels = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const data = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
+    labels,
     datasets: [
       {
         label: "Feedbacks amount",
-        data: Object.keys(feedbacksByMonths).map(
-          month => feedbacksByMonths[month].length
-        ),
+        data: labels.map((_, i) => feedbacksByMonths[i]?.length),
         fill: true,
         backgroundColor: ["rgba(165, 180, 252, 1)"],
         tension: 0.4,
@@ -141,6 +140,7 @@ const ProjectPage: NextPage = () => {
   const projectId = router.query.id as string;
 
   useEffect(() => {
+    if (!projectId) return;
     supabaseClient
       .from<Feedback>("feedbacks")
       .select("*")
@@ -149,7 +149,7 @@ const ProjectPage: NextPage = () => {
         if (!feedbacks) return;
         setFeedbacks(feedbacks);
       });
-  }, []);
+  }, [projectId]);
 
   // const groupedByLanguage = groupBy(feedbacks, feedback => feedback.language);
   // const groupedByRelevance = groupBy(feedbacks, feedback => {

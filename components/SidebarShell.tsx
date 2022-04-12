@@ -233,7 +233,7 @@ export const SidebarShell = ({
                       {/* @ts-ignore */}
                       <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                         {userIsLoading && !userData && (
-                          <div className="w-36 animate-pulse bg-gray-300 h-6 rounded-md"></div>
+                          <span className="w-36 animate-pulse bg-gray-300 h-6 rounded-md"></span>
                         )}
                         {userData && userData.username}
                         {userError && user.user.id.substring(0, 20)}
