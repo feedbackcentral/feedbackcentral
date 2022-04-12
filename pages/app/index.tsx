@@ -10,7 +10,7 @@ import { SidebarShell } from "~/components/SidebarShell";
 import { getProjectsSidebarItems } from "~/lib/sidebarItems";
 
 const ProjectsPage: NextPage = () => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -34,7 +34,7 @@ const ProjectsPage: NextPage = () => {
         if (!profile) return;
         setProfile(profile);
       });
-  }, []);
+  }, [user]);
 
   const createNewProject = () => router.push("/app/projects/new");
 

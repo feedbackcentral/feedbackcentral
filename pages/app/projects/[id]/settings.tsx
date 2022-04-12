@@ -20,6 +20,7 @@ const MessagesPage: NextPage = () => {
   };
 
   useEffect(() => {
+    if (!projectId) return;
     supabaseClient
       .from<Project>("projects")
       .select("*")
@@ -29,7 +30,7 @@ const MessagesPage: NextPage = () => {
         if (!project) return;
         setProjectName(project.name);
       });
-  }, []);
+  }, [projectId]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -16,27 +16,28 @@ interface MessageCardProps {
 }
 
 const MessageCard = ({ feedback, onReply, isReplying }: MessageCardProps) => {
-  // const isPositive = feedback.relevance > 0.5;
+  const isPositive = feedback.classification === "positive";
   return (
     <div className="rounded-md h-full bg-light-100 shadow-md mt-5 p-5 w-3/10 relative <md:w-full">
       <header className="flex justify-between">
         <div className="flex gap-5 items-center">
           <Image src="/icons/twitter.svg" width={30} height={30} />
-          {/* <p>{feedback.author}</p> */}
+          {/* <p>{feedback.source_meta.author}</p> */}
         </div>
-        {/* <div className="flex items-center">
+        <div className="flex items-center">
           <div className={isPositive ? "" : "rotate-x-180 transform"}>
             <Image
               src={
-                feedback.relevance > 0.5
+                isPositive
                   ? "/icons/green_triangle.png"
                   : "/icons/red_triangle.png"
               }
               width={20}
               height={20}
+              alt={isPositive ? "positive" : "negative"}
             />
           </div>
-        </div> */}
+        </div>
       </header>
       <p className="mt-5">{feedback.content}</p>
       <footer className="flex mt-5 justify-end items-center">
@@ -74,6 +75,7 @@ const MessagesPage: NextPage = () => {
   const projectId = router.query.id as string;
 
   useEffect(() => {
+    if (!projectId) return;
     supabaseClient
       .from<Feedback>("feedbacks")
       .select("*")
@@ -82,19 +84,14 @@ const MessagesPage: NextPage = () => {
         if (!feedbacks) return;
         setFeedbacks(feedbacks);
       });
-  }, []);
+  }, [projectId]);
 
   const sortBy = (field: string) => {
     console.log({ field });
     switch (field) {
       case "default":
-        feedbacks.sort(
-          (a, b) => a.created_at.getTime() - b.created_at.getTime()
-        );
+        feedbacks.sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
         break;
-      // case "relevance":
-      //   feedbacks.sort((a, b) => b.relevance - a.relevance);
-      //   break;
       default:
         break;
     }

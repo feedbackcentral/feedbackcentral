@@ -38,9 +38,9 @@ export type Feedback = {
   content: string;
   source: string;
   source_meta: any;
-  classification?: any;
+  classification?: string;
   project_id: string;
-  created_at: Date;
+  created_at: string;
 };
 
 export type Source = {
