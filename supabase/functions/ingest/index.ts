@@ -35,7 +35,7 @@ serve(async (req: Request) => {
   };
 
   if (body.last_run_at) {
-    tweetParams["start_time"] = body.last_run_at;
+    tweetParams["start_time"] = new Date(body.last_run_at).toISOString();
   }
 
   if (body.type === "twitter_mention") {
@@ -78,7 +78,10 @@ serve(async (req: Request) => {
 
         await supabaseSecretClient
           .from("sources")
-          .update({ last_run_at: new Date().toISOString() })
+          .update({
+            last_run_at: new Date().toISOString(),
+            next_run_at: new Date().toISOString(),
+          })
           .match({ id: body.id })
           .throwOnError();
       } else {
