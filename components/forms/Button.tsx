@@ -4,12 +4,14 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   className?: string;
   isLoading?: boolean;
+  onClick?: () => any;
 }
 
 export const Button = ({
   type,
   className,
   isLoading,
+  onClick,
   children,
 }: React.PropsWithChildren<ButtonProps>) => {
   if (isLoading) {
@@ -34,7 +36,7 @@ export const Button = ({
     </button>;
   }
   return (
-    <button type={type || "button"} className={className}>
+    <button type={type || "button"} className={className} onClick={onClick}>
       {children}
     </button>
   );

@@ -16,9 +16,11 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "~/components/*": ["./components/*"]
+      "~/components/*": ["components/*"],
+      "~/lib/*": ["lib/*"],
+      "@feedbackcentral/types": ["lib/types.ts"]
     }
   },
-  "include": ["next-env.d.ts", "feedbackcentral.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "supabase", "supabase/functions"]
+  "include": ["next-env.d.ts", "lib/feedbackcentral.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "supabase"]
 }

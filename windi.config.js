@@ -13,12 +13,10 @@ export default defineConfig({
   theme: {
     extend: {
       colors: {
-        primary: colors.gray[100],
+        primary: colors.indigo[300],
         accent: colors.gray[200],
       },
     },
   },
-  plugins: [
-    require('windicss/plugin/forms')
-  ]
+  plugins: [require("windicss/plugin/forms")],
 });
