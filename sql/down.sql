@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS public.feedback CASCADE;
+DROP TABLE IF EXISTS public.feedbacks CASCADE;
 DROP TABLE IF EXISTS public.projects CASCADE;
 DROP TABLE IF EXISTS public.users CASCADE;
 DROP TABLE IF EXISTS public.integrations CASCADE;
